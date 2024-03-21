@@ -1,6 +1,8 @@
 import requests
 import click
 
+benelux = ["lu", "be", "nl"]
+eu = ["at", "be", "bg", "hr", "cy", "cz", "dk", "ee", "fi", "fr", "de", "gr", "hu", "ie", "it", "lv" ,"lt", "lu", "mt", "nl", "pl", "pt", "ro", "sk", "si", "es", "se"] 
 
 def fetch_ip_ranges(url):
     response = requests.get(url)
@@ -11,7 +13,7 @@ def fetch_ip_ranges(url):
         return None
 
 def generate_pf_rules(ip_ranges, country):
-    pf_rules = "table <luxembourg_ips> persist\n"
+    pf_rules = f"table <{country}_ips> persist\n"
     
     if ip_ranges:
         # Extract IPv4 and IPv6 addresses and add to the PF table
@@ -43,13 +45,25 @@ pass in from <{country}_ips> to any
 
 
 @click.command()
-@click.option('--country', required=True, type=click.STRING , help='Specify the country codes for which you want to allow access.')
+@click.option('--country', required=True, type=click.STRING , help='Specify the country code for which you want to allow access, or benelux, or eu.')
 def cli(country):
+    if country == "benelux":
+        for c in benelux:
+            url = f"https://raw.githubusercontent.com/ipverse/rir-ip/master/country/{c}/aggregated.json"
+            ip_ranges = fetch_ip_ranges(url)
+            pf_rules = generate_pf_rules(ip_ranges, c)
+            print(pf_rules)
+    if country == "eu":
+        for c in eu:
+            url = f"https://raw.githubusercontent.com/ipverse/rir-ip/master/country/{c}/aggregated.json"
+            ip_ranges = fetch_ip_ranges(url)
+            pf_rules = generate_pf_rules(ip_ranges, c)
+            print(pf_rules)
+            
     url = f"https://raw.githubusercontent.com/ipverse/rir-ip/master/country/{country}/aggregated.json"
     ip_ranges = fetch_ip_ranges(url)
     pf_rules = generate_pf_rules(ip_ranges, country)
     print(pf_rules)
-
 
 if __name__ == '__main__':
     cli()
