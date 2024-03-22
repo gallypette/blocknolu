@@ -10,43 +10,48 @@ country_groups = {
     "eu": eu,
 }
 
+def fetch_ip_services(country):
+    url_rir_ip = f"https://raw.githubusercontent.com/ipverse/rir-ip/master/country/{country}/aggregated.json"
+    url_ip_deny = f"https://www.ipdeny.com/ipblocks/data/countries/{country}.zone"
+    ip_rir_ip= fetch_ip_ranges(url_rir_ip)
+    ip_rir_ip = ip_rir_ip.json()
+    ip_ip_deny= fetch_ip_ranges(url_ip_deny)
+    ip_ip_deny = ip_ip_deny.text
+    ip_ranges = ip_rir_ip["subnets"]["ipv4"]
+    ip_ranges += ip_rir_ip["subnets"]["ipv6"]
+    ip_ranges += ip_ip_deny.split("\n")
+    # close your eyes
+    return list(set(list(filter(None,ip_ranges))))
+
 def fetch_ip_ranges(url):
     response = requests.get(url)
     if response.status_code == 200:
-        return response.json()
+        return response
     else:
         print("Failed to fetch data. Status code:", response.status_code)
         return None
 
 def generate_table(ip_ranges, country, output_format):
-    pf_rules = f"table <{country}_ips> persist\n"
-    
-    if ip_ranges:
-        ipv4_addresses = ip_ranges["subnets"]["ipv4"]
-        ipv6_addresses = ip_ranges["subnets"]["ipv6"]
-        
-        if output_format == 'pf':
-            pf_rules = f"table <{country}_ips> persist\n"
-            pf_rules += f"table <{country}_ips> const {{" + ", ".join(ipv4_addresses + ipv6_addresses) + "}\n"
-            return pf_rules
-        elif output_format == 'cisco':
-            cisco_rules = ""
-            acl_name = f"{country}_ips"
-            for ip in ipv4_addresses + ipv6_addresses:
-                cisco_rules += f"permit ip {ip} any\n"
-            return f"ip access-list extended {acl_name}\n{cisco_rules}"
+    pf_rules = ""
+    if output_format == 'pf':
+        pf_rules = f"table <{country}_ips> persist\n"
+        pf_rules = f"table <{country}_ips> persist\n"
+        pf_rules += f"table <{country}_ips> const {{" + ", ".join(ip_ranges) + "}\n"
+        return pf_rules
+    elif output_format == 'cisco':
+        cisco_rules = ""
+        acl_name = f"{country}_ips"
+        for ip in ip_ranges:
+            cisco_rules += f"permit ip {ip} any\n"
+        return f"ip access-list extended {acl_name}\n{cisco_rules}"
 
-    else:
-        pf_rules = "Failed to generate PF rules due to data fetching error."
-    
     return pf_rules
 
 def generate_tables_for_group(group, output_format):
     pf_rules = ""
 
     for c in group:
-        url = f"https://raw.githubusercontent.com/ipverse/rir-ip/master/country/{c}/aggregated.json"
-        ip_ranges = fetch_ip_ranges(url)
+        ip_ranges = fetch_ip_services(c)
         pf_rules += generate_table(ip_ranges, c, output_format)
         pf_rules += "\n"
 
@@ -68,8 +73,7 @@ def cli(country, format):
         pf_rules = generate_tables_for_group(group, format)
         print(pf_rules)
     else:
-        url = f"https://raw.githubusercontent.com/ipverse/rir-ip/master/country/{country}/aggregated.json"
-        ip_ranges = fetch_ip_ranges(url)
+        ip_ranges = fetch_ip_services(country)
         pf_rules = generate_table(ip_ranges, country, format)
 
         if format == 'pf':

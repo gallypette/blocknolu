@@ -1,4 +1,7 @@
 # blocknolu
+- The tools fetches Geoblock definition from two sources:
+  - https://www.ipdeny.com
+  - https://github.com/ipverse/rir-ip/
 - The `build_geo_table.py` can build pf tables or cisco extended access list (I haven't tested the cisco part though, so i'd appreciate some feedback / PR if needed).
 - It can build tables for most country codes plus benelux, and europe:
   - `benelux = ["lu", "be", "nl"]`
