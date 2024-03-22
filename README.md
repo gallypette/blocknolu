@@ -3,9 +3,11 @@
   - https://www.ipdeny.com
   - https://github.com/ipverse/rir-ip/
 - The `build_geo_table.py` can build pf tables or cisco extended access list (I haven't tested the cisco part though, so i'd appreciate some feedback / PR if needed).
-- It can build tables for most country codes plus benelux, and europe:
+- It can build tables for most country codes plus Benelux, Europe, Europe 'extended':
   - `benelux = ["lu", "be", "nl"]`
-  - `eu = ["at", "be", "bg", "hr", "cy", "cz", "dk", "ee", "fi", "fr", "de", "gr", "hu", "ie", "it", "lv" ,"lt", "lu", "mt", "nl", "pl", "pt", "ro", "sk", "si", "es", "se"]` 
+  - `eu = ["at", "be", "bg", "hr", "cy", "cz", "dk", "ee", "fi", "fr", "de", "gr", "hu", "ie", "it", "lv" ,"lt", "lu", "mt", "nl", "pl", "pt", "ro", "sk", "si", "es", "se"]`
+  - `eu_extended = ["ad", "at", "ax", "be", "bg", "cy", "cz", "de", "dk", "ee", "es", "fi", "fr", "gb", "gi", "gr", "hr", "hu", "ie", "it", "li", "lt", "lu", "lv", "mc", "mt", "nl", "pl", "pt", "ro", "se", "si", "sk", "va"]
+
 - Beware that in addition to the tables generated, the script adds the following expressions:
 ```bash
 block in
@@ -27,7 +29,7 @@ python3 ./build_geo_table.py --help
 Usage: build_geo_table.py [OPTIONS]
 
 Options:
-  --country [eu|benelux|ad|ae|af|ag|ai|al|am|ao|ar|as|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|bi|bj|bl|bm|bn|bo|bq|br|bs|bt|bw|by|bz|ca|cd|cf|cg|ch|ci|ck|cl|cm|cn|co|cr|cu|cv|cw|cy|cz|de|dj|dk|dm|do|dz|ec|ee|eg|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gp|gq|gr|gt|gu|gw|gy|hk|hn|hr|ht|hu|id|ie|il|im|in|io|iq|ir|is|it|je|jm|jo|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|me|mf|mg|mh|mk|ml|mm|mn|mo|mp|mq|mr|ms|mt|mu|mv|mw|mx|my|mz|na|nc|ne|nf|ng|ni|nl|no|np|nr|nu|nz|om|pa|pe|pf|pg|ph|pk|pl|pm|pr|ps|pt|pw|py|qa|re|ro|rs|ru|rw|sa|sb|sc|sd|se|sg|si|sk|sl|sm|sn|so|sr|ss|st|sv|sx|sy|sz|tc|td|tg|th|tj|tk|tl|tm|tn|to|tr|tt|tv|tw|tz|ua|ug|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|za|zm|zw]
+  --country [eu|eu_extended|benelux|ad|ae|af|ag|ai|al|am|ao|ar|as|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|bi|bj|bl|bm|bn|bo|bq|br|bs|bt|bw|by|bz|ca|cd|cf|cg|ch|ci|ck|cl|cm|cn|co|cr|cu|cv|cw|cy|cz|de|dj|dk|dm|do|dz|ec|ee|eg|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gp|gq|gr|gt|gu|gw|gy|hk|hn|hr|ht|hu|id|ie|il|im|in|io|iq|ir|is|it|je|jm|jo|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|me|mf|mg|mh|mk|ml|mm|mn|mo|mp|mq|mr|ms|mt|mu|mv|mw|mx|my|mz|na|nc|ne|nf|ng|ni|nl|no|np|nr|nu|nz|om|pa|pe|pf|pg|ph|pk|pl|pm|pr|ps|pt|pw|py|qa|re|ro|rs|ru|rw|sa|sb|sc|sd|se|sg|si|sk|sl|sm|sn|so|sr|ss|st|sv|sx|sy|sz|tc|td|tg|th|tj|tk|tl|tm|tn|to|tr|tt|tv|tw|tz|ua|ug|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|za|zm|zw]
                                   Specify the country code for which you want
                                   to create a table, or benelux, or eu.
                                   [required]
