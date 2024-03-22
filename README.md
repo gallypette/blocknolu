@@ -6,7 +6,7 @@
 - It can build tables for most country codes plus Benelux, Europe, Europe 'extended':
   - `benelux = ["lu", "be", "nl"]`
   - `eu = ["at", "be", "bg", "hr", "cy", "cz", "dk", "ee", "fi", "fr", "de", "gr", "hu", "ie", "it", "lv" ,"lt", "lu", "mt", "nl", "pl", "pt", "ro", "sk", "si", "es", "se"]`
-  - `eu_extended = ["ad", "at", "ax", "be", "bg", "cy", "cz", "de", "dk", "ee", "es", "fi", "fr", "gb", "gi", "gr", "hr", "hu", "ie", "it", "li", "lt", "lu", "lv", "mc", "mt", "nl", "pl", "pt", "ro", "se", "si", "sk", "va"]
+  - `eu_extended = ["ad", "at", "ax", "be", "bg", "cy", "cz", "de", "dk", "ee", "es", "fi", "fr", "gb", "gi", "gr", "hr", "hu", "ie", "it", "li", "lt", "lu", "lv", "mc", "mt", "nl", "pl", "pt", "ro", "se", "si", "sk", "va"]`
 
 - Beware that in addition to the tables generated, the script adds the following expressions:
 ```bash
