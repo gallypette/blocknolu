@@ -22,7 +22,6 @@ def generate_table(ip_ranges, country, output_format):
     pf_rules = f"table <{country}_ips> persist\n"
     
     if ip_ranges:
-        # Extract IPv4 and IPv6 addresses and add to the PF table
         ipv4_addresses = ip_ranges["subnets"]["ipv4"]
         ipv6_addresses = ip_ranges["subnets"]["ipv6"]
         
@@ -44,11 +43,19 @@ def generate_table(ip_ranges, country, output_format):
 
 def generate_tables_for_group(group, output_format):
     pf_rules = ""
+
     for c in group:
         url = f"https://raw.githubusercontent.com/ipverse/rir-ip/master/country/{c}/aggregated.json"
         ip_ranges = fetch_ip_ranges(url)
         pf_rules += generate_table(ip_ranges, c, output_format)
         pf_rules += "\n"
+
+    if output_format == 'pf':
+        pf_rules += "block in\n"
+        pf_rules += "pass out\n"
+        for c in group:
+            pf_rules += f"pass in from <{c}_ips> to any \n"
+
     return pf_rules
 
 
@@ -64,6 +71,12 @@ def cli(country, format):
         url = f"https://raw.githubusercontent.com/ipverse/rir-ip/master/country/{country}/aggregated.json"
         ip_ranges = fetch_ip_ranges(url)
         pf_rules = generate_table(ip_ranges, country, format)
+
+        if format == 'pf':
+            pf_rules += "block in\n"
+            pf_rules += "pass out\n"
+            pf_rules += f"pass in from <{country}_ips> to any \n"
+
         print(pf_rules)
 
 if __name__ == '__main__':
