@@ -26,17 +26,6 @@ def generate_table(ip_ranges, country, output_format):
         ipv4_addresses = ip_ranges["subnets"]["ipv4"]
         ipv6_addresses = ip_ranges["subnets"]["ipv6"]
         
-        # pf_rules = f"table <{country}_ips> const {{"
-        
-        # for i, ip in enumerate(ipv4_addresses + ipv6_addresses):
-        #     if i+1 != len(ipv4_addresses + ipv6_addresses):
-        #         pf_rules += f"{ip}, "
-        #     else:
-        #         pf_rules += f"{ip}"
-
-        # pf_rules+= "}\n"
-
-
         if output_format == 'pf':
             pf_rules = f"table <{country}_ips> persist\n"
             pf_rules += f"table <{country}_ips> const {{" + ", ".join(ipv4_addresses + ipv6_addresses) + "}\n"
